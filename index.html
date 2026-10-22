@@ -131,7 +131,10 @@ document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
 let t = 0, playing = false, last = null, acc = 0, baseline = 'webster';
 const scrub = document.getElementById('scrub'), playBtn = document.getElementById('play'), speedSel = document.getElementById('speed');
 // resize a canvas only when its on-screen size changes (resizing every frame is slow)
-function fitCanvas(c){ const w = c.clientWidth, h = +c.getAttribute('height'), dpr = window.devicePixelRatio||1;
+function fitCanvas(c){
+  // the CSS height is fixed from the original height attribute, so a high-DPI bitmap never stretches the box
+  const h = +(c.dataset.h || (c.dataset.h = c.getAttribute('height'))); c.style.height = h + 'px';
+  const w = c.clientWidth, dpr = window.devicePixelRatio||1;
   if (c._w !== w || c._dpr !== dpr){ c.width = Math.max(10, Math.round(w*dpr)); c.height = Math.round(h*dpr); c._w = w; c._dpr = dpr; c._ver = (c._ver||0) + 1; }
   const ctx = c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return [ctx, w, h]; }
 
